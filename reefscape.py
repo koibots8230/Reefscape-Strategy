@@ -49,8 +49,8 @@ class Action:
 
 remainingReef = {
     "Score L1": 24,
-    "Score L2": 6,
-    "Score L3": 0,
+    "Score L2": 12,
+    "Score L3": 12,
     "Score L4": 12
 }
 
@@ -158,9 +158,6 @@ class Robot:
                         except:  # specify ValueError (nitpick)
                             pass
                 else:
-                    if reefAlgae > 3:
-                        remainingReef["Score L2"] += 2
-                    remainingReef["Score L3"] += 2
                     reefAlgae -= 1
                     if reefAlgae == 0:
                         try:
