@@ -57,9 +57,6 @@ remainingReef = {
 groundAlgae = 3
 reefAlgae = 6
 
-autoTime = 15
-teleopTime = 135
-
 auto_actions = {
     "Score L1": Action(3, 24, 5, 0.5, .90),
     "Score L2": Action(4, 12, 6, 1, .80),
@@ -136,7 +133,6 @@ class Robot:
                 sample = np.random.choice(self.autoActions)
             if "Score L" in find_key(auto_actions, sample):
                 remainingReef[find_key(auto_actions, sample)] -= 1
-
                 if remainingReef[find_key(auto_actions, sample)] == 0:
                     try:
                         self.autoActions.remove(sample)
@@ -206,3 +202,6 @@ class Robot:
 
     def endgame(self):
         return findBestAction(self.endgameActions)
+
+    def copy(self):
+        return copy.deepcopy(self)
