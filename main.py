@@ -14,45 +14,46 @@ def quickestActionTime(actions):
     return quickestTime
 
 
-def test_robot(robot1: Robot, robot2: Robot, robot3: Robot):
+def test_robot(robots):
     autoTime = 15
     teleopTime = 135
 
     points = [0, 0, 0]
 
-    while autoTime > 0:
-        if quickestActionTime(robot.autoActions) > autoTime:
-            break
-        action = robot.autoSample()
-        if (autoTime > action.get_time()):
-            #            print(f"Doing Auto Action: {reefscape.find_key(reefscape.auto_actions, action)}")
-            points[0] += action.points if random.randint(1, 10) < action.success_proportion * 10 else 0
-            autoTime -= action.get_time()
-
-    while teleopTime > 0:
-        if quickestActionTime(robot.telopActions) > teleopTime:
-            break
-        doEndgame = np.random.choice([True, False],
-                                     p=[((135 - teleopTime) / 135) * 0.8, (((135 - teleopTime) / 135) * -0.8) + 1])
-        if doEndgame:
-            endgame = robot.endgame()
-            endgameTime = endgame.get_time()
-            if endgameTime > teleopTime:
-                #                print(f"Doing Endgame: {reefscape.find_key(reefscape.endgame_actions, endgame)}")
-                points[2] += endgame.points if random.randint(1, 10) < endgame.success_proportion * 10 else 0
+    for robot in robots:
+        while autoTime > 0:
+            if quickestActionTime(robot.autoActions) > autoTime:
                 break
-        action = robot.teleopSample()
-        actionTime = action.get_time()
-        if (teleopTime > actionTime):
-            #            print(f"Doing Teleop Action: {reefscape.find_key(reefscape.teleop_actions, action)}")
-            if robot.pipeGround:
-                while random.randint(1, 10) > action.success_proportion * 10:
-                    teleopTime -= np.random.normal(4, 0.5)
-                points[1] += action.points
-                teleopTime -= actionTime
-            else:
-                points[1] += action.points if random.randint(1, 10) < action.success_proportion * 10 else 0
-                teleopTime -= actionTime
+            action = robot.autoSample()
+            if (autoTime > action.get_time()):
+                #            print(f"Doing Auto Action: {reefscape.find_key(reefscape.auto_actions, action)}")
+                points[0] += action.points if random.randint(1, 10) < action.success_proportion * 10 else 0
+                autoTime -= action.get_time()
+
+        while teleopTime > 0:
+            if quickestActionTime(robot.telopActions) > teleopTime:
+                break
+            doEndgame = np.random.choice([True, False],
+                                         p=[((135 - teleopTime) / 135) * 0.8, (((135 - teleopTime) / 135) * -0.8) + 1])
+            if doEndgame:
+                endgame = robot.endgame()
+                endgameTime = endgame.get_time()
+                if endgameTime > teleopTime:
+                    #                print(f"Doing Endgame: {reefscape.find_key(reefscape.endgame_actions, endgame)}")
+                    points[2] += endgame.points if random.randint(1, 10) < endgame.success_proportion * 10 else 0
+                    break
+            action = robot.teleopSample()
+            actionTime = action.get_time()
+            if (teleopTime > actionTime):
+                #            print(f"Doing Teleop Action: {reefscape.find_key(reefscape.teleop_actions, action)}")
+                if robot.pipeGround:
+                    while random.randint(1, 10) > action.success_proportion * 10:
+                        teleopTime -= np.random.normal(4, 0.5)
+                    points[1] += action.points
+                    teleopTime -= actionTime
+                else:
+                    points[1] += action.points if random.randint(1, 10) < action.success_proportion * 10 else 0
+                    teleopTime -= actionTime
 
     #    print(f"Final Points: {points}")
     return points
